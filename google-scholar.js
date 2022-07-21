@@ -63,7 +63,7 @@ function toggleShowHide(div) {
               const bibText = await fetch(bibURL).then((e) => e.text());
               bibTextArea.value = bibText;
             } catch (error) {
-              bibTextArea.value = `Error while fetching ${bibURL}.\n\nPlease see the console for the error message.\n\nYou may need installing extensions allowing CORS.`;
+              bibTextArea.value = `Error while fetching ${bibURL}.\n\nPlease see the console for the error message.\n\nYou may need to install extensions allowing CORS.`;
             }
           });
           Array.from(this.querySelectorAll('div.gs_ri div.gs_fl > a'))

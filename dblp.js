@@ -7,6 +7,7 @@
 // @match        https://dblp.org/search?*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=dblp.org
 // @require      https://cdn.jsdelivr.net/npm/arrive@2.4.1/minified/arrive.min.js
+// @require      https://cdn.jsdelivr.net/gh/ORCID/bibtexParseJs@b55dc9e4015f9dec67921f56f8f23dadb71697ad/bibtexParse.min.js
 // @grant        GM_addStyle
 // ==/UserScript==
 
@@ -41,8 +42,14 @@
       'nav.publ > ul > li:nth-child(2) > div.head > a'
     ).href.replace('.html', '.bib');
     const bibText = await fetch(bibURL).then((e) => e.text());
-    this.querySelector('.bib-textarea').value = bibText;
+    const bibJSON = bibtexParse.toJSON(bibText);
+    bibJSON[0].citationKey = bibJSON[0].citationKey.replace(
+      /[^a-zA-Z0-9]+/g,
+      '_'
+    );
+    this.querySelector('.bib-textarea').value = bibtexParse.toBibtex(
+      bibJSON,
+      false
+    );
   });
-
-  // TODO: clean bib text with https://github.com/ORCID/bibtexParseJs
 })();
