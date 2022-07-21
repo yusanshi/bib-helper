@@ -43,25 +43,32 @@ function toggleShowHide(div) {
         if (container.hasChildNodes()) {
           toggleShowHide(container);
         } else {
-          container.innerHTML = `<textarea rows="10" class="bib-textarea" style="font-size:11px;margin-top:8px;border-color:rgb(220,220,220);border-radius:5px;outline:none;width:100%;color:gray;" onclick="this.select()">Fetching BibTeX record...</textarea>`;
+          container.innerHTML = `<textarea rows="8" class="bib-textarea" style="font-size:11px;margin-top:8px;border-color:rgb(220,220,220);border-radius:5px;outline:none;width:100%;color:gray;" onclick="this.select()">Fetching BibTeX record...</textarea>`;
 
           const bibTextArea = this.querySelector('.bib-textarea');
-          document.arrive('#gs_citi', { existing: true }, async () => {
-            const bibTagArray = Array.from(
-              document.querySelectorAll('#gs_citi a')
-            ).filter((e) => e.textContent === 'BibTeX');
-            if (bibTagArray.length === 1) {
-              const bibURL = bibTagArray[0].href;
-              try {
-                const bibText = await fetch(bibURL).then((e) => e.text());
-                bibTextArea.value = bibText;
-              } catch (error) {
-                bibTextArea.value = bibURL;
-              }
-            } else {
+          document.arrive('#gs_citi', { onceOnly: true }, async () => {
+            let bibURL;
+            try {
+              const bibAnchor = Array.from(
+                document.querySelectorAll('#gs_citi a')
+              ).filter((e) => e.textContent === 'BibTeX')[0];
+              bibURL = bibAnchor.href;
+              document.querySelector('#gs_cit-x').click();
+            } catch (error) {
               bibTextArea.value = 'BibTeX entry not found!';
+              document.querySelector('#gs_cit-x').click();
+              return;
+            }
+            try {
+              const bibText = await fetch(bibURL).then((e) => e.text());
+              bibTextArea.value = bibText;
+            } catch (error) {
+              bibTextArea.value = `Error while fetching ${bibURL}.\n\nPlease see the console for the error message.\n\nYou may need installing extensions allowing CORS.`;
             }
           });
+          Array.from(this.querySelectorAll('div.gs_ri div.gs_fl > a'))
+            .filter((e) => e.textContent === 'Cite')[0]
+            .click();
         }
       });
       this.querySelector('.dblp-iframe-button').addEventListener(
