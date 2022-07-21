@@ -2,8 +2,9 @@
 // @name         Google Scholar Bib Helper
 // @namespace    http://tampermonkey.net/
 // @version      0.1
-// @description  Copy BibTeX record quickly within search results.
+// @description  Copy BibTeX records quickly within search results.
 // @author       yusanshi
+// @license      MIT
 // @match        https://scholar.google.com/scholar?*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=scholar.google.com
 // @require      https://cdn.jsdelivr.net/npm/arrive@2.4.1/minified/arrive.min.js
