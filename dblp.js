@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DBLP Bib Helper
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 // @description  Copy BibTeX records quickly within search results.
 // @author       yusanshi
 // @license      MIT
@@ -32,38 +32,26 @@
 
   const entrySelector = '#completesearch-publs li.entry';
 
-  document.arrive(entrySelector, { existing: true }, async function () {
-    const bibURL = this.querySelector(
-      'nav.publ > ul > li:nth-child(2) > div.head > a'
-    ).href.replace('.html', '.bib');
-    const entryIndex = Array.from(
-      document.querySelectorAll(entrySelector)
-    ).indexOf(this);
+  document.arrive(entrySelector, { existing: true }, function () {
     this.querySelector('cite').insertAdjacentHTML(
       'beforeend',
-      `<textarea rows="10" id="bibtext${entryIndex}" class="bib-textarea verbatim" style="font-size:11px;margin-top:6px;width:100%;display:block;" onclick="this.select()" data-src="${bibURL}">Fetching BibTeX record...</textarea>`
+      '<br><textarea rows="10" class="bib-textarea" style="font-size:11px;margin-top:6px;border-color:rgb(220,220,220);border-radius:5px;outline:none;width:100%;color:gray;" onclick="this.select()">Fetching BibTeX record...</textarea>'
     );
-    // lazy loads bibtex entries
-    const observer = lozad(`#bibtext${entryIndex}`, {
-      load: function(element) {
-        const bibURL = element.getAttribute('data-src');
-        function reqListener () {
-          const bibText = this.responseText;
-          const bibJSON = bibtexParse.toJSON(bibText);
-          bibJSON[0].citationKey = bibJSON[0].citationKey.replace(
-            /[^a-zA-Z0-9]+/g,
-            '_'
-          );
-          element.value = bibtexParse.toBibtex(
-            bibJSON,
-            false
-          );
-        }
-        var oReq = new XMLHttpRequest();
-        oReq.addEventListener("load", reqListener);
-        oReq.open("GET", bibURL);
-        oReq.send();
-      }
+
+    const bibTextArea = this.querySelector('.bib-textarea');
+    const observer = lozad(bibTextArea, {
+      load: async () => {
+        const bibURL = this.querySelector(
+          'nav.publ > ul > li:nth-child(2) > div.head > a'
+        ).href.replace('.html', '.bib');
+        const bibText = await fetch(bibURL).then((e) => e.text());
+        const bibJSON = bibtexParse.toJSON(bibText);
+        bibJSON[0].citationKey = bibJSON[0].citationKey.replace(
+          /[^a-zA-Z0-9]+/g,
+          '_'
+        );
+        bibTextArea.value = bibtexParse.toBibtex(bibJSON, false);
+      },
     });
     observer.observe();
   });
