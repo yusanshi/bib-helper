@@ -10,7 +10,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=dblp.org
 // @require      https://cdn.jsdelivr.net/npm/arrive@2.4.1/minified/arrive.min.js
 // @require      https://cdn.jsdelivr.net/gh/ORCID/bibtexParseJs@b55dc9e4015f9dec67921f56f8f23dadb71697ad/bibtexParse.min.js
-// @require      https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js
+// @require      https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js
 // @grant        GM_addStyle
 // ==/UserScript==
 
