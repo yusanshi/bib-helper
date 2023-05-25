@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         DBLP Bib Helper
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.3
 // @description  Copy BibTeX records quickly within search results.
 // @author       yusanshi
 // @license      MIT
-// @match        https://dblp.org/search?*
-// @match        https://dblp.org/pid/*/*
+// @match        https://dblp.org/*
+// @match        https://dblp.uni-trier.de/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=dblp.org
 // @require      https://cdn.jsdelivr.net/npm/arrive@2.4.1/minified/arrive.min.js
 // @require      https://cdn.jsdelivr.net/gh/ORCID/bibtexParseJs@b55dc9e4015f9dec67921f56f8f23dadb71697ad/bibtexParse.min.js
