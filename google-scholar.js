@@ -1,14 +1,15 @@
 // ==UserScript==
 // @name         Google Scholar Bib Helper
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 // @description  Copy BibTeX records quickly within search results.
 // @author       yusanshi
 // @license      MIT
 // @match        https://scholar.google.com/scholar?*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=scholar.google.com
 // @require      https://cdn.jsdelivr.net/npm/arrive@2.4.1/minified/arrive.min.js
-// @grant        none
+// @grant        GM.xmlHttpRequest
+// @connect      scholar.googleusercontent.com
 // ==/UserScript==
 
 function toggleShowHide(div) {
@@ -61,10 +62,12 @@ function toggleShowHide(div) {
               return;
             }
             try {
-              const bibText = await fetch(bibURL).then((e) => e.text());
+              const bibText = (await GM.xmlHttpRequest({ url: bibURL }))
+                .responseText;
               bibTextArea.value = bibText;
             } catch (error) {
-              bibTextArea.value = `Error while fetching ${bibURL}.\n\nPlease see the console for the error message.\n\nYou may need to install extensions allowing CORS.`;
+              console.log(error);
+              bibTextArea.value = `Error while fetching ${bibURL}.\n\nPlease see the console for the error message.`;
             }
           });
           Array.from(this.querySelectorAll('div.gs_ri div.gs_fl > a'))
